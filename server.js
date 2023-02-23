@@ -7,7 +7,7 @@ require("dotenv").config()
 
 const app = express();
 app.use(cors());
-const port = 3000;
+const port = process.env.PORT;
 
 const pool = new Pool({
     host: process.env.PGHOST,
@@ -42,7 +42,7 @@ app.post('/sectors', async (req, res) => {
   try {
     const query = {
       text: 'INSERT INTO sectors (name, sectors_col,agreed) VALUES ($1, $2,$3) RETURNING id',
-      values: [name, sectors_col],
+      values: [name, sectors_col, agreed],
     };
     const result = await pool.query(query);
     const id = result.rows[0].id;
@@ -80,3 +80,4 @@ app.get('/sectors/:id?', async (req, res) => {
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
+
